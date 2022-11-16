@@ -32,6 +32,8 @@ let init ns =
   let ts_int = ns_find_ts ns [ "Gospelstdlib"; "int" ] in
   Hid.replace driver ts_int.ts_ident [ "int63" ];
   let ls_nil = ns_find_ls ns [ "[]" ] in
-  Hid.replace driver ls_nil.ls_name [ "Nil" ]
+  Hid.replace driver ls_nil.ls_name [ "Nil" ];
+  let ls_set_op = ns_find_ls ns [ "Gospelstdlib"; "mixfix [->]" ] in
+  Hid.replace driver ls_set_op.ls_name [ "mixfix [<-]" ]
 
 let query_syntax str = Hid.find_opt driver str

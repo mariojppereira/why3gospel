@@ -85,6 +85,8 @@ module Gospelstdlib
 
     predicate mem (x: 'a) (s: fset 'a) = FS.mem x s
 
+    function add (x: 'a) (s: fset 'a) : fset 'a = FS.add x s
+
     constant empty: fset 'a = FS.empty
 
     function singleton (x: 'a) : fset 'a = FS.singleton x
@@ -394,6 +396,10 @@ module Gospelstdlib
   (*   lemma cmp_eq: forall x y: 'a, cmp: 'a -> 'a -> int. *)
   (*     is_pre_order cmp -> (cmp x y = 0 <-> x = y) *)
   (* end *)
+
+  use import map.Map as M
+
+  function ( [<-] ) (f: 'a -> 'b) (x: 'a) (y: 'b) : 'a -> 'b
 
   (* scope Map *)
   (*   use export map.Map *)

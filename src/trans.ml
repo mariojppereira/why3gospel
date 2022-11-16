@@ -230,7 +230,7 @@ let type_decl info (T.{ td_ts = { ts_ident }; td_spec; td_manifest } as td) =
     td_vis = td_vis_from_manifest td_manifest;
     td_mut;
     td_inv;
-    td_wit = [];
+    td_wit = None;
     td_def = td_def info td_fields td_manifest;
   }
 
@@ -359,6 +359,10 @@ let empty_spec =
 (** Convert GOSPEL [val] declarations into Why3's Ptree [val] declarations. *)
 let val_decl info vd g =
   let mk_single_param lb_arg =
+    (* since why3 1.5.0, I no longer have access to extraction attrubutes, as
+     * the [ocaml] module is now oppaque *)
+    let named_arg = Ident.create_attribute "ocaml:named" in
+    let optional_arg = Ident.create_attribute "ocaml:optional" in
     let add_at_id at id = { id with id_ats = ATstr at :: id.id_ats } in
     let id_loc = loc_of_lb_arg lb_arg in
     let pty = ty info (Th.ty_of_lb_arg lb_arg) in
@@ -368,9 +372,9 @@ let val_decl info vd g =
       | Lunit -> (id, false, pty)
       | Lnone _ -> (id, false, pty)
       | Lghost _ -> (id, true, pty)
-      | Lnamed _ -> (add_at_id Ocaml.Print.named_arg id, false, pty)
+      | Lnamed _ -> (add_at_id named_arg id, false, pty)
       | Loptional _ ->
-          let id = add_at_id Ocaml.Print.optional_arg id in
+          let id = add_at_id optional_arg id in
           (id, false, PTtyapp (Qident (mk_id "option" ~id_loc), [ pty ]))
     in
     (id_loc, Some id, ghost, pty)

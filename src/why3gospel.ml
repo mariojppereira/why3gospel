@@ -82,7 +82,7 @@ let read_extra_file file =
     in
     let f = read_file why3_file nm c in
     close_in c;
-    (Lists.map_filter extract_use f, List.fold_left extract_vals Mstr.empty f))
+    (List.filter_map extract_use f, List.fold_left extract_vals Mstr.empty f))
   else ([], Mstr.empty)
 
 (* TODO equivalent clauses

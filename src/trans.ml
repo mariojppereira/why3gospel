@@ -17,8 +17,10 @@ open Ptree
 
 type gdecl = Gdecl of decl | Gmodule of Loc.position * ident * gdecl list
 
-let location { loc_start = b; loc_end = e } = Loc.extract (b, e)
 let dummy_loc = Loc.dummy_position
+let location ({ loc_start = b; loc_end = e } as l) =
+  if l = Location.none then dummy_loc
+  else Loc.extract (b, e)
 
 let mk_id ?(id_ats = []) ?(id_loc = Loc.dummy_position) id_str =
   let id_str =

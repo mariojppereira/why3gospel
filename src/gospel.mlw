@@ -29,6 +29,7 @@ module Gospelstdlib
 
   type integer = int
 
+  function (-_) (x: integer) : integer = Int.(-_) x
   function (+) (x y: integer) : integer = Int.(+) x y
   function (-) (x y: integer) : integer = Int.(-) x y
   function ( * ) (x y: integer) : integer = Int.( * ) x y
@@ -66,6 +67,9 @@ module Gospelstdlib
 
     function set (s: seq 'a) (i: int) (v: 'a) : seq 'a =
       S.set s i v
+
+    function get (s: seq 'a) (i: int) : 'a =
+      S.get s i
 
   end
   import Seq
@@ -355,6 +359,14 @@ module Gospelstdlib
 
   type int63 = I.int63
   function integer_of_int (x: int63) : integer = to_int x
+  (* FIXME: the following coercion declaration makes Why3 complain that
+            there is already a coercion from type [int63] to type [int].
+            The existing coercion is, indeed, the coercion defined in module
+            [mach.int.Int63]. However, I cannot really access this coercion
+            when writing a Gospel specification that is to be consumed by
+            Cameleer. I am not importing, by default, the [Int63] module
+            from Why3 standard library in Cameleer. *)
+  (* meta coercion function integer_of_int *)
 
   constant max_int : integer = I.max_int63
   constant min_int : integer = I.min_int63
@@ -399,7 +411,8 @@ module Gospelstdlib
 
   use import map.Map as M
 
-  function ( [<-] ) (f: 'a -> 'b) (x: 'a) (y: 'b) : 'a -> 'b
+  function ( [<-] ) (f: 'a -> 'b) (x: 'a) (y: 'b) : 'a -> 'b =
+    M.set f x y
 
   (* scope Map *)
   (*   use export map.Map *)

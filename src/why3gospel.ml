@@ -142,11 +142,11 @@ let read_channel env path file c =
   (* let f = filter_equiv f in
    * if f <> [] then print_equiv file f; *)
   (if Debug.test_flag print_modules then
-   let open Why3.Ident in
-   let open Why3.Pmodule in
-   let print_m _ m = Format.eprintf "%a@\n@." print_module m in
-   let add_m _ m mm = Mid.add m.mod_theory.Theory.th_name m mm in
-   Mid.iter print_m (Mstr.fold add_m mm Mid.empty));
+     let open Why3.Ident in
+     let open Why3.Pmodule in
+     let print_m _ m = Format.eprintf "%a@\n@." print_module m in
+     let add_m _ m mm = Mid.add m.mod_theory.Theory.th_name m mm in
+     Mid.iter print_m (Mstr.fold add_m mm Mid.empty));
   mm
 
 let () =

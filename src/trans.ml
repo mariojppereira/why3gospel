@@ -18,9 +18,9 @@ open Ptree
 type gdecl = Gdecl of decl | Gmodule of Loc.position * ident * gdecl list
 
 let dummy_loc = Loc.dummy_position
+
 let location ({ loc_start = b; loc_end = e } as l) =
-  if l = Location.none then dummy_loc
-  else Loc.extract (b, e)
+  if l = Location.none then dummy_loc else Loc.extract (b, e)
 
 let mk_id ?(id_ats = []) ?(id_loc = Loc.dummy_position) id_str =
   let id_str =
@@ -206,7 +206,7 @@ let td_vis_from_manifest = function None -> Private | Some _ -> Public
 let td_def info td_fields td_manifest =
   let field_of_lsymbol (ls, mut) =
     let id = Term.ident_of_lsymbol ls in
-    let pty = Term.ty info Term.(Opt.get ls.Ts.ls_value) in
+    let pty = Term.ty info Term.(Option.get ls.Ts.ls_value) in
     mk_field id.id_loc id pty ~mut ~ghost:true
   in
   let td_def_of_ty_fields ty_fields =
@@ -462,8 +462,8 @@ let function_ info (T.{ fun_ls = { ls_name; ls_value } } as f) =
   let id_loc = location ls_name.I.id_loc in
   let id = mk_id ls_name.I.id_str ~id_loc in
   let params = List.map (param_of_vsymbol info) f.fun_params in
-  let pty = Opt.map (ty info) ls_value in
-  let term = Opt.map (term info) f.T.fun_def in
+  let pty = Option.map (ty info) ls_value in
+  let term = Option.map (term info) f.T.fun_def in
   Dlogic [ mk_logic_decl loc id params pty term ]
 
 (** Convert GOSPEL axioms into Why3's Ptree axioms. *)
@@ -516,7 +516,7 @@ let signature =
         let info_arg = update_path info id_str in
         (* we treat the functor argument before the body in order to correctly
            update the info table *)
-        let mod_arg = module_type info_arg (Opt.get arg) in
+        let mod_arg = module_type info_arg (Option.get arg) in
         let body = module_type info body in
         Gmodule (id_loc, id, mod_arg) :: body
     | T.Mod_with _ (* of module_type * with_constraint list *) ->
